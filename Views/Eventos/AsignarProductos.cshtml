@@ -1,0 +1,109 @@
+﻿@model EvesysWebApp.Models.Evento
+
+@{
+    ViewData["Title"] = "Asignar Productos a Evento";
+}
+
+<h1>Asignar Productos</h1>
+
+<h3>Evento: @Model.Titulo (@Model.FechaHora.ToString("dd/MM/yyyy HH:mm"))</h3>
+
+<hr />
+
+@* Mostrar mensajes de éxito o error *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <h4>Añadir Nuevo Producto</h4>
+        <form asp-action="AsignarProductos" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="EventoId" value="@Model.EventoId" />
+
+            <div class="form-group">
+                <label for="ProductoId" class="control-label">Producto</label>
+                <select name="ProductoId" class="form-control" asp-items="ViewBag.ProductosDisponibles">
+                    <option value="">-- Seleccione un Producto --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Cantidad" class="control-label">Cantidad</label>
+                <input name="Cantidad" type="number" min="1" class="form-control" required />
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Asignar Producto" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-7">
+        <h4>Productos Asignados</h4>
+        @if (Model.EventosProductos != null && Model.EventosProductos.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.EventosProductos)
+                    {
+                        <tr>
+                            <td>@item.Producto.Nombre</td>
+                            <td>
+                                @* Formulario para edición de Cantidad *@
+                                <form asp-action="EditarCantidadAsignada" method="post" style="display:inline-flex; align-items:center;">
+                                    <input type="hidden" name="EventoId" value="@item.EventoId" />
+                                    <input type="hidden" name="ProductoId" value="@item.ProductoId" />
+                                    <input type="number" name="NuevaCantidad" value="@item.Cantidad" min="1" class="form-control me-2" style="width: 80px;" required />
+                                    <button type="submit" class="btn btn-sm btn-primary" title="Guardar Cantidad">
+                                        Guardar
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                @* Formulario para la eliminación *@
+                                <form asp-action="EliminarProductoAsignado" method="post" style="display:inline;">
+                                    <input type="hidden" name="EventoId" value="@item.EventoId" />
+                                    <input type="hidden" name="ProductoId" value="@item.ProductoId" />
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('¿Está seguro de eliminar este producto del evento?');" title="Eliminar Producto">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay productos asignados a este evento.</p>
+        }
+    </div>
+</div>
+
+<hr />
+<div>
+    <a asp-action="Details" asp-route-id="@Model.EventoId">Volver a Detalles del Evento</a> |
+    <a asp-action="Index">Volver a la Lista de Eventos</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

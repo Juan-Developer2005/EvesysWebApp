@@ -1,0 +1,46 @@
+﻿@model EvesysWebApp.Models.Servicio
+
+@{
+    ViewData["Title"] = "Detalles del Servicio";
+}
+
+<h1>Detalles del Servicio</h1>
+
+<div>
+    <h4>Servicio</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Costo)
+        </dt>
+        <dd class="col-sm-9">
+            @* Formato de moneda, si usas la cultura por defecto o la configuras en tu proyecto *@
+            @Html.DisplayFor(model => model.Costo)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.UnidadMedida)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.UnidadMedida)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ServicioId">Editar</a> |
+    <a asp-action="Index">Volver a la Lista</a>
+</div>

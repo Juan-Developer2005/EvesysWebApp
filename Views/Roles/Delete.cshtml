@@ -1,0 +1,35 @@
+﻿@model EvesysWebApp.Models.Rol
+
+@{
+    ViewData["Title"] = "Eliminar Rol";
+}
+
+<h1>Eliminar Rol</h1>
+
+<h3>¿Estás seguro de que quieres eliminar este rol?</h3>
+<div>
+    <hr />
+
+    @if (ViewBag.DeletionWarning != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>¡ADVERTENCIA!</strong> @ViewBag.DeletionWarning
+        </div>
+    }
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="RolId" />
+        <div class="text-danger">@Html.ValidationMessage("Error")</div>
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

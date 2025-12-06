@@ -1,0 +1,42 @@
+﻿@model EvesysWebApp.Models.Evento
+
+@{
+    ViewData["Title"] = "Detalles del Evento";
+}
+
+<h1>Detalles del Evento</h1>
+
+<div>
+    <h4>Evento</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.FechaHora)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.FechaHora)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+        <dt class="col-sm-3">
+            Usuario Creador
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Usuario.NombreCompleto)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.EventoId" class="btn btn-warning">Editar</a> |
+    <a asp-action="Index">Volver a la Lista</a>
+</div>
