@@ -1,4 +1,5 @@
 ﻿using EvesysWebApp.Data;
+using EvesysWebApp.Models; // Necesario para la clase Usuario
 using EvesysWebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Authorization; // Para usar el atributo [AllowAnonymo
 
 namespace EvesysWebApp.Controllers
 {
-    // El Login y Logout deben permitir el acceso a cualquiera
+    // El Login, Registro y Logout deben permitir el acceso a cualquiera
     [AllowAnonymous]
     public class AuthController : Controller
     {
@@ -19,6 +20,10 @@ namespace EvesysWebApp.Controllers
         {
             _context = context;
         }
+
+        // ===================================
+        // LOGIN
+        // ===================================
 
         // GET: Auth/Login (Muestra el formulario)
         public IActionResult Login()
@@ -46,7 +51,7 @@ namespace EvesysWebApp.Controllers
                         new Claim(ClaimTypes.NameIdentifier, user.UsuarioId.ToString()),
                         new Claim(ClaimTypes.Name, user.NombreCompleto),
                         new Claim(ClaimTypes.Email, user.Email),
-                        // ¡IMPORTANTE! Asigna el Nombre del Rol (Ej: Administrador, Gerente)
+                        // ¡IMPORTANTE! Asigna el Nombre del Rol
                         new Claim(ClaimTypes.Role, user.Rol.Nombre)
                     };
 
@@ -66,6 +71,67 @@ namespace EvesysWebApp.Controllers
             }
             return View(model);
         }
+
+        // ===================================
+        // REGISTRO
+        // ===================================
+
+        // GET: Auth/Register (Muestra el formulario de registro)
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        // POST: Auth/Register (Procesa el registro del usuario)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // 1. Verificar si el email ya existe
+                if (await _context.Usuarios.AnyAsync(u => u.Email == model.Email))
+                {
+                    ModelState.AddModelError("Email", "Este Email ya se encuentra registrado.");
+                    return View(model);
+                }
+
+                // 2. Asignar Rol por Defecto (buscamos "Técnico de Logística")
+                var defaultRol = await _context.Roles.FirstOrDefaultAsync(r => r.RolId == 3);
+
+                if (defaultRol == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Error de sistema: El Rol por defecto (ID 3) no existe en la base de datos. Ejecute las migraciones y SeedData.");
+                    return View(model);
+                }
+
+                // 3. Crear nuevo usuario
+                var newUser = new Usuario
+                {
+                    NombreCompleto = model.NombreCompleto,
+                    Email = model.Email,
+                    Contrasena = model.Contrasena, // Nota: En un sistema real se debería hashear la contraseña
+                    RolId = defaultRol.RolId
+                };
+
+                _context.Usuarios.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                // Opcional: Loguear al usuario automáticamente después del registro
+                // Llama al método Login con los datos del nuevo usuario si lo deseas.
+                // Por ahora, solo redirigimos al login para que inicie sesión.
+
+                TempData["SuccessMessage"] = "¡Registro exitoso! Por favor inicia sesión.";
+                return RedirectToAction(nameof(Login));
+            }
+
+            return View(model);
+        }
+
+
+        // ===================================
+        // LOGOUT
+        // ===================================
 
         // POST: Auth/Logout (Cierra la sesión)
         [HttpPost]

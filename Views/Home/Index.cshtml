@@ -1,8 +1,108 @@
 ﻿@{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Bienvenido a Evesys";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bienvenido a EvesysWebApp</h1>
-    <p>Sistema de Gestión de Eventos y Logística de Inventario.</p>
+<style>
+
+    .hero-section {
+        padding: 80px 0; 
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem; 
+        font-weight: 300;
+        margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        color: #6c757d; 
+        margin-bottom: 40px;
+    }
+
+    .feature-card {
+        padding: 20px;
+        border-radius: 8px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        height: 100%;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        color: #dc3545;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container">
+
+    <div class="hero-section">
+        <h1 class="hero-title display-4">Bienvenido a EvesysWebApp</h1>
+        <p class="hero-subtitle lead">
+            Sistema de Gestión Integral para Eventos, Recursos y Logística de Inventario.
+        </p>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <p>
+                <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg me-3">
+                    Iniciar Sesión
+                </a>
+                <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-secondary btn-lg">
+                    Registrarse
+                </a>
+            </p>
+        }
+        else
+        {
+            <p class="text-success lead">
+                Has iniciado sesión. Utiliza el menú superior para acceder a los módulos de gestión.
+            </p>
+        }
+    </div>
+
+    <hr class="my-5">
+
+    <h2 class="text-center mb-4">Módulos Clave del Sistema</h2>
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card shadow-sm">
+                <div class="text-center">
+                    <span class="feature-icon">📅</span>
+                    <h3 class="h5">Eventos</h3>
+                    <p>Crea, planifica y gestiona todos los eventos, desde la cotización hasta la ejecución.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card shadow-sm">
+                <div class="text-center">
+                    <span class="feature-icon">📦</span>
+                    <h3 class="h5">Productos e Inventario</h3>
+                    <p>Control de stock, disponibilidad y estado de todo el equipo de logística.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card shadow-sm">
+                <div class="text-center">
+                    <span class="feature-icon">👥</span>
+                    <h3 class="h5">Usuarios y Roles</h3>
+                    <p>Administración centralizada de usuarios y permisos de acceso al sistema.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
